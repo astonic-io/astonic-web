@@ -1,4 +1,4 @@
-export const WEI_PER_UNIT = '1000000000000000000' // 1 Celo or Ether
+export const WEI_PER_UNIT = '1000000000000000000' // 1 Planq or Ether
 export const STANDARD_TOKEN_DECIMALS = 18
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const AVG_BLOCK_TIMES = 5000 // 5 seconds
@@ -22,4 +22,5 @@ export const MAX_EXCHANGE_SPREAD = 0.1 // 10%
 
 export const ERC20_ABI = [
   'function allowance(address owner, address spender) view returns (uint256)',
+  'function balanceOf(address owner) view returns (uint256)',
 ]

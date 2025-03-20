@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { SwapFormValues, ToCeloRates } from 'src/features/swap/types'
+import { SwapFormValues, ToPlanqRates } from 'src/features/swap/types'
 
 export interface SwapState {
   formValues: SwapFormValues | null
-  toCeloRates: ToCeloRates
+  toPlanqRates: ToPlanqRates
   showSlippage: boolean
   showChart: boolean
   confirmView: boolean
@@ -11,7 +11,7 @@ export interface SwapState {
 
 const initialState: SwapState = {
   formValues: null,
-  toCeloRates: {},
+  toPlanqRates: {},
   showSlippage: false,
   showChart: false,
   confirmView: false,

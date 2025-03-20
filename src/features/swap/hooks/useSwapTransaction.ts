@@ -3,10 +3,13 @@ import BigNumber from 'bignumber.js'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { TokenId, getTokenAddress } from 'src/config/tokens'
-import { getMentoSdk, getTradablePairForTokens } from 'src/features/sdk'
+import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
 import { SwapDirection } from 'src/features/swap/types'
 import { logger } from 'src/utils/logger'
-import { usePrepareSendTransaction, useSendTransaction } from 'wagmi'
+import { useSendTransaction, useEstimateGas  } from 'wagmi'
+import { chainConfig } from '../../../config/config'
+import { Address } from 'abitype/zod'
+import { estimateGas } from '@wagmi/core'
 
 export function useSwapTransaction(
   chainId: number,
@@ -16,9 +19,10 @@ export function useSwapTransaction(
   thresholdAmountInWei: string,
   direction: SwapDirection,
   accountAddress?: Address,
-  isApproveConfirmed?: boolean
+  isApproveConfirmed?: boolean,
+  isWrapConfirmed?: boolean
 ) {
-  const { error: txPrepError, data: txRequest } = useQuery(
+  const { error: txPrepError, data: txRequest, isLoading: queryIsLoading } = useQuery(
     [
       'useSwapTransaction',
       chainId,
@@ -29,18 +33,20 @@ export function useSwapTransaction(
       direction,
       accountAddress,
       isApproveConfirmed,
+      isWrapConfirmed,
     ],
     async () => {
       if (
         !accountAddress ||
         !isApproveConfirmed ||
+        !isWrapConfirmed ||
         new BigNumber(amountInWei).lte(0) ||
         new BigNumber(thresholdAmountInWei).lte(0)
       ) {
         logger.debug('Skipping swap transaction')
         return null
       }
-      const sdk = await getMentoSdk(chainId)
+      const sdk = await getAstonicSdk(chainId)
       const fromTokenAddr = getTokenAddress(fromToken, chainId)
       const toTokenAddr = getTokenAddress(toToken, chainId)
       const tradablePair = await getTradablePairForTokens(chainId, fromToken, toToken)
@@ -56,33 +62,42 @@ export function useSwapTransaction(
       if (!txRequest.to) {
         throw new Error('Swap transaction to address is undefined')
       }
-      return { ...txRequest, to: txRequest.to! }
+      const gasResult = await estimateGas(chainConfig,
+        txRequest ? {
+          to: txRequest.to as `0x${string}`,
+          value: BigInt(txRequest.value ? txRequest.value.toString() : 0),
+          data: txRequest.data as `0x${string}`,
+          account: txRequest.from as `0x${string}`,
+        } : {}
+      )
+
+      return { ...txRequest, to: txRequest.to!, gas: gasResult }
     }
   )
 
-  const { config, error: sendPrepError } = usePrepareSendTransaction(
-    isApproveConfirmed && txRequest ? { request: txRequest } : undefined
-  )
   const {
     data: txResult,
     isLoading,
     isSuccess,
     error: txSendError,
     sendTransactionAsync,
-  } = useSendTransaction(config)
+  } = useSendTransaction()
 
   useEffect(() => {
-    if (txPrepError || (sendPrepError?.message && !isLoading && !isSuccess)) {
+    if(!txRequest) return
+    if (txPrepError || (!isLoading && !isSuccess)) {
       toast.error('Unable to prepare swap transaction')
-      logger.error(txPrepError || sendPrepError?.message)
+      logger.error(txPrepError)
     } else if (txSendError) {
       toast.error('Unable to execute swap transaction')
       logger.error(txSendError)
     }
-  }, [txPrepError, sendPrepError, isLoading, isSuccess, txSendError])
+  }, [txPrepError, isLoading, isSuccess, txSendError])
+
 
   return {
-    sendSwapTx: sendTransactionAsync,
+    sendSwapTx: txRequest ? sendTransactionAsync : undefined,
+    swapTxRequest: txRequest,
     swapTxResult: txResult,
     isSwapTxLoading: isLoading,
     isSwapTxSuccess: isSuccess,

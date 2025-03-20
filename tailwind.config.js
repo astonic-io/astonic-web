@@ -51,7 +51,7 @@ module.exports = {
       sans: ['Roboto', 'sans-serif'],
       serif: ['serif'],
       mono: ['Roboto Mono', 'Courier New', 'monospace'],
-      fg: ['var(--font-founders-grotesk)'],   
+      fg: ['var(--font-poppins)'],
       inter: ['Inter', 'sans-serif'],
     },
     fontSize: {

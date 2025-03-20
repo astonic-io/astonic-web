@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { SWAP_QUOTE_REFETCH_INTERVAL } from 'src/config/consts'
 import { TokenId, Tokens, getTokenAddress } from 'src/config/tokens'
-import { getMentoSdk, getTradablePairForTokens } from 'src/features/sdk'
+import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
 import { SwapDirection } from 'src/features/swap/types'
 import {
   calcExchangeRate,
@@ -38,13 +38,13 @@ export function useSwapQuote(
       const amountDecimals = isSwapIn ? fromToken.decimals : toToken.decimals
       const quoteDecimals = isSwapIn ? toToken.decimals : fromToken.decimals
       if (amountWeiBN.lte(0) || !fromToken || !toToken) return null
-      const mento = await getMentoSdk(chainId)
+      const astonic = await getAstonicSdk(chainId)
       const tradablePair = await getTradablePairForTokens(chainId, fromTokenId, toTokenId)
 
       const quoteWei = (
         isSwapIn
-          ? await mento.getAmountOut(fromTokenAddr, toTokenAddr, amountWeiBN, tradablePair)
-          : await mento.getAmountIn(fromTokenAddr, toTokenAddr, amountWeiBN, tradablePair)
+          ? await astonic.getAmountOut(fromTokenAddr, toTokenAddr, amountWeiBN, tradablePair)
+          : await astonic.getAmountIn(fromTokenAddr, toTokenAddr, amountWeiBN, tradablePair)
       ).toString()
 
       const quote = fromWei(quoteWei, quoteDecimals)

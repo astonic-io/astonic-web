@@ -13,12 +13,12 @@ export interface SwapFormValues {
   slippage: string
 }
 
-export type ToCeloRates = Partial<Record<TokenId, ExchangeRate>>
+export type ToPlanqRates = Partial<Record<TokenId, ExchangeRate>>
 
-// Raw Mento chain data from an Exchange contract
+// Raw Astonic chain data from an Exchange contract
 export interface ExchangeRate {
   stableBucket: string
-  celoBucket: string
+  planqBucket: string
   spread: string
   lastUpdated: number
 }

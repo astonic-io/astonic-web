@@ -1,18 +1,18 @@
 {
-  "name": "@mento-protocol/mento-web",
+  "name": "@astonic-io/astonic-web",
   "version": "2.3.7",
-  "description": "A simple DApp for Celo Mento exchanges",
+  "description": "A simple DApp for Astonic exchanges",
   "keywords": [
-    "Celo",
-    "Mento",
+    "Planq",
+    "Astonic",
     "Exchange"
   ],
-  "author": "J M Rossy",
+  "author": "astonic-dev",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mento-protocol/mento-web"
+    "url": "https://github.com/astonic-io/astonic-web"
   },
-  "homepage": "https://app.mento.org",
+  "homepage": "https://app.astonic.io",
   "license": "Apache-2.0",
   "engines": {
     "node": "^18.20.6"
@@ -30,14 +30,13 @@
     "prettier": "prettier --write ./src"
   },
   "dependencies": {
-    "@celo/rainbowkit-celo": "^0.11.0",
+    "@astonic-io/astonic-sdk": "^1.0.9",
     "@headlessui-float/react": "^0.11.2",
     "@headlessui/react": "^1.7.13",
-    "@mento-protocol/mento-sdk": "^1.0.4",
     "@metamask/jazzicon": "https://github.com/jmrossy/jazzicon#7a8df28",
     "@metamask/post-message-stream": "6.1.2",
     "@metamask/providers": "10.2.1",
-    "@rainbow-me/rainbowkit": "0.12.16",
+    "@rainbow-me/rainbowkit": "^2.2.2",
     "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.29.14",
     "@vercel/analytics": "^1.0.1",
@@ -56,7 +55,8 @@
     "react-toastify": "^9.1.3",
     "sharp": "^0.33.0",
     "toformat": "^2.0.0",
-    "wagmi": "0.12.18"
+    "wagmi": "^2.14.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",

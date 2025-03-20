@@ -8,7 +8,7 @@ import { BlockStub } from 'src/features/blocks/types'
 import { useAppSelector } from 'src/features/store/hooks'
 import Moon from 'src/images/icons/moon.svg'
 import Sun from 'src/images/icons/sun.svg'
-import Discord from 'src/images/logos/discord.svg'
+import Telegram from 'src/images/logos/telegram.svg'
 import Github from 'src/images/logos/github.svg'
 import Twitter from 'src/images/logos/twitter.svg'
 import { useDarkMode } from 'src/styles/mediaQueries'
@@ -25,7 +25,7 @@ export function Footer() {
           <FooterIconLink to={links.github} imgSrc={Github} alt="Github" />
         </div>
         <div className="p-2 justify-start items-start gap-2.5 flex">
-          <FooterIconLink to={links.discord} imgSrc={Discord} alt="Discord" />
+          <FooterIconLink to={links.telegram} imgSrc={Telegram} alt="Telegram" />
         </div>
       </div>
       <ThemeToggle />

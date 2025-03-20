@@ -1,17 +1,17 @@
-import { Mento, TradablePair } from '@mento-protocol/mento-sdk'
+import { Astonic, TradablePair } from '@astonic-io/astonic-sdk'
 import { ChainId } from 'src/config/chains'
 import { TokenId, getTokenAddress } from 'src/config/tokens'
 import { getProvider } from 'src/features/providers'
 
-const cache: Record<number, Mento> = {}
+const cache: Record<number, Astonic> = {}
 
-export async function getMentoSdk(chainId: ChainId): Promise<Mento> {
+export async function getAstonicSdk(chainId: ChainId): Promise<Astonic> {
   if (cache[chainId]) return cache[chainId]
 
   const provider = getProvider(chainId)
-  const mento = await Mento.create(provider)
-  cache[chainId] = mento
-  return mento
+  const astonic = await Astonic.create(provider)
+  cache[chainId] = astonic
+  return astonic
 }
 
 export async function getTradablePairForTokens(
@@ -19,7 +19,7 @@ export async function getTradablePairForTokens(
   tokenInId: TokenId,
   tokenOutId: TokenId
 ): Promise<TradablePair> {
-  const sdk = await getMentoSdk(chainId)
+  const sdk = await getAstonicSdk(chainId)
   const tokenInAddr = getTokenAddress(tokenInId, chainId)
   const tokenOutAddr = getTokenAddress(tokenOutId, chainId)
   return await sdk.findPairForTokens(tokenInAddr, tokenOutAddr)

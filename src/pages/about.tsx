@@ -10,10 +10,10 @@ export default function AboutPage() {
   return (
     <div className="flex justify-center items-center grow">
       <FloatingBox maxWidth="max-w-xl" classes="mb-2 mx-10 p-6">
-        <h2 className="text-lg text-center font-medium">About Mento</h2>
+        <h2 className="text-lg text-center font-medium">About Astonic</h2>
         <p className={pClass}>
-          Mento is a decentralized and transparent protocol that allows everyone to create and
-          exchange stable value digital assets. For more details about how Mento works, see{' '}
+          Astonic is a decentralized and transparent protocol that allows everyone to create and
+          exchange stable value digital assets. For more details about how Astonic works, see{' '}
           <TextLink href={links.docs} className="text-green-600">
             the documentation
           </TextLink>
@@ -21,7 +21,7 @@ export default function AboutPage() {
         </p>
         <HrDivider classes="mt-4" />
         <p className={pClass}>
-          How to start exchanging Celo native assets:
+          How to start exchanging Planq native assets:
           <ol className="list-inside list-decimal">
             <li>
               Tap <q>Connect</q> in the top-right and select your wallet
@@ -40,10 +40,10 @@ export default function AboutPage() {
         </p>
         <HrDivider classes="mt-4" />
         <p className={pClass}>
-          This app is a free tool to facilitate use of the Mento Protocol. It was funded by the Celo
-          Foundation and Mento Labs. For help, join the chat on{' '}
-          <TextLink href={links.discord} className="text-green-600">
-            Discord
+          This app is a free tool to facilitate use of the Astonic Protocol. It was funded by the Planq
+          Foundation and Astonic Labs. For help, join the chat on{' '}
+          <TextLink href={links.telegram} className="text-green-600">
+            Telegram
           </TextLink>{' '}
           or view the source on{' '}
           <TextLink href={links.github} className="text-green-600">

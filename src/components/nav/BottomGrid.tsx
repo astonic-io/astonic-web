@@ -1,17 +1,17 @@
 import Image from 'next/image'
-import BackgroundTilesDark from 'src/images/background/background_tiles_dark.png'
-import BackgroundTiles from 'src/images/background/background_tiles_light.png'
+import BackgroundTilesDark from 'src/images/background/background_tiles_light.png'
+import BackgroundTiles from 'src/images/background/background_tiles_dark.png'
 
 export function BottomGrid() {
   return (
     <div className="absolute bottom-0 transform -translate-x-1/2 left-1/2 pointer-events-none">
-      <div className="w-screen h-[201px] relative">
+      <div className="w-screen h-[401px] relative">
         <Image
           src={BackgroundTiles}
           alt="Background Tiles"
           quality={100}
           fill={true}
-          style={{ objectFit: 'cover' }}
+          style={{ opacity: '0.25' }}
           className="inline dark:hidden"
         />
         <Image
@@ -19,7 +19,7 @@ export function BottomGrid() {
           alt="Background Tiles"
           quality={100}
           fill={true}
-          style={{ objectFit: 'cover' }}
+          style={{ opacity: '0.25' }}
           className="hidden dark:inline"
         />
       </div>

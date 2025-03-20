@@ -1,19 +1,11 @@
 import Image from 'next/image'
 import { memo } from 'react'
 import { Token, TokenId } from 'src/config/tokens'
-import CeloIcon from 'src/images/tokens/CELO.svg'
-import PUSOIcon from 'src/images/tokens/PUSO.svg'
+import PlanqIcon from 'src/images/tokens/PLANQ.svg'
 import USDCIcon from 'src/images/tokens/USDC.svg'
-import USDTIcon from 'src/images/tokens/USDT.svg'
-import axlEUROCIcon from 'src/images/tokens/axlEUROC.svg'
-import axlUSDCIcon from 'src/images/tokens/axlUSDC.svg'
-import cCOPIcon from 'src/images/tokens/cCOP.svg'
-import cEURIcon from 'src/images/tokens/cEUR.svg'
-import cGHSIcon from 'src/images/tokens/cGHS.svg'
-import cKESIcon from 'src/images/tokens/cKES.svg'
-import cREALIcon from 'src/images/tokens/cREAL.svg'
-import cUSDIcon from 'src/images/tokens/cUSD.svg'
-import eXOFIcon from 'src/images/tokens/eXOF.svg'
+import aEURIcon from 'src/images/tokens/aEUR.png'
+import aREALIcon from 'src/images/tokens/aBRL.png'
+import aUSDIcon from 'src/images/tokens/aUSD.png'
 
 interface Props {
   token?: Token | null
@@ -36,19 +28,11 @@ function _TokenIcon({ token, size = 'm' }: Props) {
   }
 
   let imgSrc
-  if (token?.id === TokenId.CELO) imgSrc = CeloIcon
-  else if (token?.id === TokenId.cUSD) imgSrc = cUSDIcon
-  else if (token?.id === TokenId.cEUR) imgSrc = cEURIcon
-  else if (token?.id === TokenId.cREAL) imgSrc = cREALIcon
+  if (token?.id === TokenId.PLANQ) imgSrc = PlanqIcon
+  else if (token?.id === TokenId.aUSD) imgSrc = aUSDIcon
+  else if (token?.id === TokenId.aEUR) imgSrc = aEURIcon
+  else if (token?.id === TokenId.aREAL) imgSrc = aREALIcon
   else if (token?.id === TokenId.USDC) imgSrc = USDCIcon
-  else if (token?.id === TokenId.USDT) imgSrc = USDTIcon
-  else if (token?.id === TokenId.axlUSDC) imgSrc = axlUSDCIcon
-  else if (token?.id === TokenId.axlEUROC) imgSrc = axlEUROCIcon
-  else if (token?.id === TokenId.eXOF) imgSrc = eXOFIcon
-  else if (token?.id === TokenId.cKES) imgSrc = cKESIcon
-  else if (token?.id === TokenId.PUSO) imgSrc = PUSOIcon
-  else if (token?.id === TokenId.cCOP) imgSrc = cCOPIcon
-  else if (token?.id === TokenId.cGHS) imgSrc = cGHSIcon
 
   if (imgSrc) {
     return (

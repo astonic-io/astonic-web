@@ -6,8 +6,7 @@ import { getProvider } from 'src/features/providers'
 import type { AppDispatch, AppState } from 'src/features/store/store'
 import { validateAddress } from 'src/utils/addresses'
 import { isStale } from 'src/utils/time'
-import { erc20ABI } from 'wagmi'
-
+import { erc20Abi } from 'abitype/abis'
 import { logger } from '../../utils/logger'
 
 interface FetchBalancesParams {
@@ -49,7 +48,10 @@ async function getTokenBalance({
   const tokenAddress = getTokenAddress(tokenSymbol, chainId)
   const provider = getProvider(chainId)
   try {
-    const tokenContract = new Contract(tokenAddress, erc20ABI, provider)
+    const tokenContract = new Contract(tokenAddress, erc20Abi, provider)
+    if(tokenSymbol == TokenId.PLANQ) {
+      return (await getProvider(chainId).getBalance(address)).toString();
+    }
     return (await tokenContract.balanceOf(address)).toString()
   } catch (error) {
     // todo: Send such error to Sentry

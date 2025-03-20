@@ -42,7 +42,7 @@ export function NetworkModal({ isOpen, close }: Props) {
   return (
     <Modal isOpen={isOpen} close={close} title="Network details" width="max-w-md">
       <div className="inline-flex items-end justify-between w-full px-4 sm:px-6">
-        <div className="inline-flex flex-col items-center justify-start w-full gap-4 py-3 bg-gray-100 border border-gray-200 sm:py-4 dark:bg-zinc-900 rounded-xl font-inter dark:border-zinc-800">
+        <div className="inline-flex flex-col items-center justify-start w-full gap-4 py-3 bg-gray-100 border border-gray-200 sm:py-4 dark:bg-zinc-900 rounded-xl font-gabarito dark:border-zinc-800">
           <div className="inline-flex items-end justify-between w-full px-3 sm:px-4">
             <div className="text-neutral-500 dark:text-gray-400 text-[14px] sm:text-[15px] font-normal leading-tight">
               Connected to:
@@ -81,7 +81,7 @@ export function NetworkModal({ isOpen, close }: Props) {
         </div>
       </div>
       <div className="mt-4 sm:mt-6 w-full h-[0px] border-t border-gray-200 dark:border-zinc-800"></div>
-      <div className="inline-flex items-start justify-start w-full gap-4 px-4 py-4 sm:py-6 sm:px-6 font-inter">
+      <div className="inline-flex items-start justify-start w-full gap-4 px-4 py-4 sm:py-6 sm:px-6 font-gabarito">
         {allChains.map((c) => (
           <button
             onClick={() => switchToNetwork(c)}
@@ -134,8 +134,8 @@ export function NetworkModal({ isOpen, close }: Props) {
             <button
               onClick={() => switchToNetwork(c)}
               key={c.chainId}
-              className={`py-1.5 px-2 min-w-[4.5rem] rounded 
-              transition border border-gray-500 hover:border-green-700 hover:text-green-700 
+              className={`py-1.5 px-2 min-w-[4.5rem] rounded
+              transition border border-gray-500 hover:border-green-700 hover:text-green-700
               active:border-green-800 ${c.chainId === currentChain?.chainId && 'border-green-700 text-green-700'
                 }`}
             >

@@ -1,4 +1,4 @@
-import { getAddress } from '@mento-protocol/mento-sdk'
+import { getAddress } from '@astonic-io/astonic-sdk'
 import { useQuery } from '@tanstack/react-query'
 import { Contract } from 'ethers'
 import { ERC20_ABI } from 'src/config/consts'
@@ -15,7 +15,7 @@ async function fetchAllowance(
 ): Promise<string> {
   const tradablePair = await getTradablePairForTokens(chainId, fromTokenId, toTokenId)
   const brokerAddress = getAddress('Broker', chainId)
-  const routerAddress = getAddress('MentoRouter', chainId)
+  const routerAddress = getAddress('AstonicRouter', chainId)
   const tokenAddr = getTokenAddress(fromTokenId, chainId)
 
   logger.info(`Fetching allowance for token ${tokenAddr} on chain ${chainId}`)

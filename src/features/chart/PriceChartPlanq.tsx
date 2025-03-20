@@ -12,7 +12,7 @@ interface PriceChartProps {
   height?: number
 }
 
-export function PriceChartCelo(props: PriceChartProps) {
+export function PriceChartPlanq(props: PriceChartProps) {
   const { stableTokenId, containerClasses, height } = props
 
   // const dispatch = useAppDispatch()
@@ -20,7 +20,7 @@ export function PriceChartCelo(props: PriceChartProps) {
   //   dispatch(
   //     fetchTokenPrice({
   //       kit,
-  //       baseCurrency: TokenId.CELO,
+  //       baseCurrency: TokenId.PLANQ,
   //     })
   //   )
   //     .unwrap()
@@ -31,8 +31,8 @@ export function PriceChartCelo(props: PriceChartProps) {
   // }, [dispatch, kit, initialised, network])
 
   const allPrices = useAppSelector((s) => s.tokenPrice.prices)
-  const celoPrices = allPrices[TokenId.CELO]
-  const stableTokenPrices = celoPrices ? celoPrices[stableTokenId] : undefined
+  const planqPrices = allPrices[TokenId.PLANQ]
+  const stableTokenPrices = planqPrices ? planqPrices[stableTokenId] : undefined
   const chartData = tokenPriceHistoryToChartData(stableTokenPrices)
   const chartHeight = height || 250
 
@@ -42,7 +42,7 @@ export function PriceChartCelo(props: PriceChartProps) {
   return (
     <FloatingBox width="w-96" classes={`overflow-hidden ${containerClasses}`}>
       <div className="flex justify-between">
-        <h2 className="text-md font-medium pl-3 py-1">CELO Price (USD)</h2>
+        <h2 className="text-md font-medium pl-3 py-1">PLANQ Price (USD)</h2>
         {/* TODO duration toggle */}
         <div></div>
       </div>
@@ -53,7 +53,7 @@ export function PriceChartCelo(props: PriceChartProps) {
           height={chartHeight}
           axisOptions={chartConfig.axis}
           tooltipOptions={chartConfig.tooltipOptions}
-          // @ts-ignore TODO find issue, works in Celo Wallet
+          // @ts-ignore TODO find issue, works in Planq Wallet
           data={chartData}
         />
       </div>
@@ -62,7 +62,7 @@ export function PriceChartCelo(props: PriceChartProps) {
 }
 
 const chartConfig: any = {
-  colors: [Color.celoGold],
+  colors: [Color.planqGold],
   axis: { xAxisMode: 'tick' },
   tooltipOptions: { formatTooltipY: (d: number | null) => (d ? `$${d.toFixed(2)}` : null) },
 }

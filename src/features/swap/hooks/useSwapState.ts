@@ -1,6 +1,8 @@
-import type { SendTransactionResult } from '@wagmi/core'
 import { useMemo } from 'react'
 import { TokenId } from 'src/config/tokens'
+import type { SendTransactionReturnType  } from '@wagmi/core'
+import { SendTransactionMutateAsync } from '@wagmi/core/query'
+import { Config } from 'wagmi'
 
 interface SwapState {
   text: string
@@ -10,10 +12,19 @@ interface SwapState {
 interface UseSwapStateProps {
   isAllowanceLoading: boolean
   skipApprove: boolean
-  sendApproveTx: (() => Promise<SendTransactionResult>) | undefined
+  skipWrap: boolean
+  skipUnwrap: boolean
+  sendApproveTx: SendTransactionMutateAsync<Config, unknown>  | undefined
   isApproveTxLoading: boolean
   isApproveTxSuccess: boolean
-  sendSwapTx: (() => Promise<SendTransactionResult>) | undefined
+  isSwapTxSuccess: boolean
+  isWrapTxSuccess: boolean
+  isWrapTxLoading: boolean
+  isUnwrapTxSuccess: boolean
+  isUnwrapTxLoading: boolean
+  sendSwapTx:  SendTransactionMutateAsync<Config, unknown> | undefined
+  sendWrapTx:  SendTransactionMutateAsync<Config, unknown> | undefined
+  sendUnwrapTx:  SendTransactionMutateAsync<Config, unknown> | undefined
   fromTokenId: TokenId
 }
 
@@ -35,9 +46,18 @@ export function useSwapState(props: UseSwapStateProps): SwapState {
   const {
     fromTokenId,
     skipApprove,
+    skipWrap,
+    skipUnwrap,
     isAllowanceLoading,
     isApproveTxLoading,
     isApproveTxSuccess,
+    isSwapTxSuccess,
+    isWrapTxSuccess,
+    isWrapTxLoading,
+    isUnwrapTxSuccess,
+    isUnwrapTxLoading,
+    sendWrapTx,
+    sendUnwrapTx,
     sendApproveTx,
     sendSwapTx,
   } = props
@@ -48,6 +68,28 @@ export function useSwapState(props: UseSwapStateProps): SwapState {
       return {
         text: `Checking ${fromTokenId} allowance...`,
         disabled: true,
+      }
+    }
+
+    // 1.1 Wrap Flow
+    if(!skipWrap) {
+      if(!isWrapTxSuccess) {
+        return {
+          text: 'Wrap PLQ',
+          disabled: false,
+        }
+      }
+      if (isWrapTxLoading) {
+        return {
+          text: `Wrapping ${fromTokenId}...`,
+          disabled: true,
+        }
+      }
+      if (!sendWrapTx) {
+        return {
+          text: 'Preparing Wrap Transaction...',
+          disabled: true,
+        }
       }
     }
 
@@ -65,7 +107,7 @@ export function useSwapState(props: UseSwapStateProps): SwapState {
           disabled: true,
         }
       }
-      if (!isApproveTxSuccess) {
+      if (!isApproveTxSuccess && (isWrapTxSuccess || skipWrap)) {
         return {
           text: `Approve ${fromTokenId}`,
           disabled: false,
@@ -80,6 +122,34 @@ export function useSwapState(props: UseSwapStateProps): SwapState {
         disabled: true,
       }
     }
+    if(!isSwapTxSuccess) {
+      return {
+        text: 'Swap',
+        disabled: false,
+      }
+    }
+
+    // 1.1 Wrap Flow
+    if(!skipUnwrap) {
+      if(!isUnwrapTxSuccess) {
+        return {
+          text: 'Unwrap PLQ',
+          disabled: false,
+        }
+      }
+      if (isUnwrapTxLoading) {
+        return {
+          text: `Unwrapping ${fromTokenId}...`,
+          disabled: true,
+        }
+      }
+      if (!sendUnwrapTx) {
+        return {
+          text: 'Preparing Unwrap Transaction...',
+          disabled: true,
+        }
+      }
+    }
 
     return {
       text: 'Swap',
@@ -88,9 +158,18 @@ export function useSwapState(props: UseSwapStateProps): SwapState {
   }, [
     isAllowanceLoading,
     skipApprove,
+    skipWrap,
+    skipUnwrap,
     sendApproveTx,
     isApproveTxLoading,
     isApproveTxSuccess,
+    isSwapTxSuccess,
+    isWrapTxSuccess,
+    isWrapTxLoading,
+    sendWrapTx,
+    isUnwrapTxSuccess,
+    isUnwrapTxLoading,
+    sendUnwrapTx,
     sendSwapTx,
     fromTokenId,
   ])

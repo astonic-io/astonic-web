@@ -10,7 +10,10 @@ import { useAppDispatch } from 'src/features/store/hooks'
 import { reset as swapReset } from 'src/features/swap/swapSlice'
 import { SwapFormValues } from 'src/features/swap/types'
 import { logger } from 'src/utils/logger'
-import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { planq } from '@wagmi/core/chains'
+import { useAccount } from 'wagmi'
+import { getConnections, switchChain } from '@wagmi/core'
+import { chainConfig } from '../../../config/config'
 
 interface ISubmitButtonProps {
   isWalletConnected: boolean | undefined
@@ -18,17 +21,20 @@ interface ISubmitButtonProps {
 }
 
 export function SubmitButton({ isWalletConnected, isBalanceLoaded }: ISubmitButtonProps) {
-  const { chain, chains } = useNetwork()
-  const { switchNetworkAsync } = useSwitchNetwork()
+  const { chain } = useAccount()
+  const connections = getConnections(chainConfig)
+
   const { openConnectModal } = useConnectModal()
   const dispatch = useAppDispatch()
   const { errors, touched, values, isSubmitting } = useFormikContext<SwapFormValues>()
 
   const switchToNetwork = useCallback(async () => {
     try {
-      if (!switchNetworkAsync) throw new Error('switchNetworkAsync undefined')
-      logger.debug('Resetting and switching to Celo')
-      await switchNetworkAsync(42220)
+      logger.debug('Resetting and switching to Planq')
+      await switchChain(chainConfig, {
+        chainId: planq.id,
+        connector: connections[0]?.connector
+      } )
       dispatch(blockReset())
       dispatch(accountReset())
       dispatch(swapReset())
@@ -37,9 +43,9 @@ export function SubmitButton({ isWalletConnected, isBalanceLoaded }: ISubmitButt
       logger.error('Error updating network', error)
       toast.error('Could not switch network, does wallet support switching?')
     }
-  }, [switchNetworkAsync, dispatch])
+  }, [switchChain, dispatch])
 
-  const isOnCelo = chains.some((chn) => chn.id === chain?.id)
+  const isOnPlanq = chain?.id == 7070
 
   const isAmountModified = useMemo(
     () => touched.amount || values.amount,
@@ -81,18 +87,18 @@ export function SubmitButton({ isWalletConnected, isBalanceLoaded }: ISubmitButt
 
   const buttonText = useMemo(() => {
     if (!isWalletConnected) return Button3DText.connectWallet
-    if (!isOnCelo) return Button3DText.switchToCeloNetwork
+    if (!isOnPlanq) return Button3DText.switchToPlanqNetwork
     if (isWalletConnected && !isBalanceLoaded) return Button3DText.balanceStillLoading
     if (hasError) return errorText
     if (isSubmitting) return Button3DText.preparingSwap
     return Button3DText.continue
-  }, [errorText, hasError, isWalletConnected, isOnCelo, isBalanceLoaded, isSubmitting])
+  }, [errorText, hasError, isWalletConnected, isOnPlanq, isBalanceLoaded, isSubmitting])
 
   const onClick = useMemo(() => {
     if (!isWalletConnected) return openConnectModal
-    if (!isOnCelo) return switchToNetwork
+    if (!isOnPlanq) return switchToNetwork
     return undefined
-  }, [isWalletConnected, isOnCelo, openConnectModal, switchToNetwork])
+  }, [isWalletConnected, isOnPlanq, openConnectModal, switchToNetwork])
 
   const isDisabled = useMemo(() => {
     if (!isWalletConnected || hasError) return false

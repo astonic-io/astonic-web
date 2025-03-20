@@ -2,7 +2,7 @@ import { FormikErrors } from 'formik'
 import { useCallback } from 'react'
 import { MIN_ROUNDED_VALUE } from 'src/config/consts'
 import { Tokens, getTokenByAddress } from 'src/config/tokens'
-import { getMentoSdk, getTradablePairForTokens } from 'src/features/sdk'
+import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
 import { IUseFormValidatorProps, SwapFormValues } from 'src/features/swap/types'
 import { parseAmount, toWei } from 'src/utils/amount'
 import { logger } from 'src/utils/logger'
@@ -43,11 +43,11 @@ async function checkTradingLimits(
   values: SwapFormValues,
   chainId: number
 ): Promise<{ exceeds: boolean; errorMsg: string }> {
-  const mento = await getMentoSdk(chainId)
+  const astonic = await getAstonicSdk(chainId)
   const tradablePair = await getTradablePairForTokens(chainId, values.fromTokenId, values.toTokenId)
   // TODO: handle multiple hops
   const exchangeId = tradablePair.path[0].id
-  const tradingLimits = await mento.getTradingLimits(exchangeId)
+  const tradingLimits = await astonic.getTradingLimits(exchangeId)
 
   let timestampIn = 0
   let timestampOut = 0

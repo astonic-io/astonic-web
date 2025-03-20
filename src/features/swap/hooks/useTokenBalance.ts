@@ -21,8 +21,8 @@ export function useTokenBalance(balances: AccountBalances, tokenId: TokenId) {
     setFieldValue('amount', maxAmount)
     setFieldValue('direction', 'in')
 
-    if (tokenId === TokenId.CELO) {
-      toast.warn('Consider keeping some CELO for transaction fees')
+    if (tokenId === TokenId.PLANQ) {
+      toast.warn('Consider keeping some PLANQ for transaction fees')
     }
   }
 

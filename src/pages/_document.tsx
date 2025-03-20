@@ -19,33 +19,36 @@ class MyDocument extends Document {
           <meta name="msapplication-config" content="/browserconfig.xml" />
           <meta name="theme-color" content="#ffffff" />
 
-          <meta name="application-name" content="Mento Stable Exchange" />
-          <meta name="keywords" content="Mento Stable Exchange Finance Celo cUSD cEUR cREAL" />
-          <meta name="description" content="Simple exchanges of Mento sustainable stable assets" />
+          <meta name="application-name" content="Astonic Stable Exchange" />
+          <meta name="keywords" content="Astonic Stable Exchange Finance Planq aUSD aEUR aREAL" />
+          <meta name="description" content="Simple exchanges of Astonic sustainable stable assets" />
 
           <meta name="HandheldFriendly" content="true" />
-          <meta name="apple-mobile-web-app-title" content="Mento Stable Exchange" />
+          <meta name="apple-mobile-web-app-title" content="Astonic Stable Exchange" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
 
-          <meta property="og:url" content="https://mento.finance" />
-          <meta property="og:title" content="Mento Stable Exchange" />
+          <meta property="og:url" content="https://app.astonic.io" />
+          <meta property="og:title" content="Astonic Stable Exchange" />
           <meta property="og:type" content="website" />
-          <meta property="og:image" content="https://mento.finance/logo-color.png" />
+          <meta property="og:image" content="https://app.astonic.io/logo.png" />
           <meta
             property="og:description"
-            content="Simple exchanges of Mento sustainable stable assets"
+            content="Simple exchanges of Astonic sustainable stable assets"
           />
           <meta name="twitter:card" content="summary" />
-          <meta name="twitter:title" content="Mento Stable Exchange" />
+          <meta name="twitter:title" content="Astonic Stable Exchange" />
           <meta
             name="twitter:description"
-            content="Simple exchanges of Mento sustainable stable assets"
+            content="Simple exchanges of Astonic sustainable stable assets"
           />
-          <meta name="twitter:image" content="https://mento.finance/logo-color.png" />
+          <meta name="twitter:image" content="https://app.astonic.io/logo.png" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={"anonymous"} />
+          <link href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap" rel="stylesheet" />
         </Head>
         <body className="text-black">
-          <Main />
-          <NextScript />
+        <Main />
+        <NextScript />
         </body>
       </Html>
     )

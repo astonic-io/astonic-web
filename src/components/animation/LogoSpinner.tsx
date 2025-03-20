@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { memo } from 'react'
-import Glyph from 'src/images/logos/mento-glyph-green.svg'
+import Glyph from 'src/images/logos/astonic_logo.svg'
 
 function _LogoSpinner() {
   return (

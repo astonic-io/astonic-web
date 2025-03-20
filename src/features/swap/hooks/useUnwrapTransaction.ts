@@ -3,27 +3,37 @@ import BigNumber from 'bignumber.js'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { TokenId, getTokenAddress } from 'src/config/tokens'
-import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
+import { getAstonicSdk } from 'src/features/sdk'
 import { logger } from 'src/utils/logger'
-import { useEstimateGas, useSendTransaction } from 'wagmi'
-import { Address } from 'abitype/zod'
+import { useSendTransaction } from 'wagmi'
 import { estimateGas } from '@wagmi/core'
-export function useApproveTransaction(
+import { getProvider } from '../../providers'
+import { Address } from 'abitype/zod'
+import { chainConfig } from '../../../config/config'
+import { Contract } from 'ethers'
+import { ERC20_ABI } from '../../../config/consts'
+
+export function useUnwrapTransaction(
   chainId: number,
   tokenInId: TokenId,
-  tokenOutId: TokenId,
   amountInWei: string,
-  isWrapConfirmed: boolean,
+  isSwapTxSuccess: boolean,
   accountAddress?: Address
 ) {
   const { error: txPrepError, data: txRequest } = useQuery(
-    ['useApproveTransaction', chainId, tokenInId, tokenOutId, amountInWei, accountAddress],
+    ['useWrapTransaction', chainId, tokenInId,  amountInWei, accountAddress],
     async () => {
-      if (!accountAddress || !isWrapConfirmed ||  new BigNumber(amountInWei).lte(0)) return null
+      if (!accountAddress || !isSwapTxSuccess || new BigNumber(amountInWei).lte(0)) return null
       const sdk = await getAstonicSdk(chainId)
       const tokenInAddr = getTokenAddress(tokenInId, chainId)
-      const tradablePair = await getTradablePairForTokens(chainId, tokenInId, tokenOutId)
-      const txRequest = await sdk.increaseTradingAllowance(tokenInAddr, amountInWei, tradablePair)
+      const contract = new Contract(tokenInAddr, ERC20_ABI, getProvider(chainId))
+
+      const balance = new BigNumber((await contract.balanceOf(accountAddress)).toString())
+      if (new BigNumber(amountInWei).gt(balance)) {
+        throw new Error('Insufficient balance')
+      }
+
+      const txRequest = await sdk.unwrapToken(tokenInAddr, amountInWei)
 
       const gasResult = await estimateGas(chainConfig,
         txRequest ? {
@@ -41,7 +51,6 @@ export function useApproveTransaction(
     }
   )
 
-
   const {
     data: txResult,
     isLoading,
@@ -49,6 +58,7 @@ export function useApproveTransaction(
     error: txSendError,
     sendTransactionAsync,
   } = useSendTransaction()
+
 
   useEffect(() => {
     if (txPrepError) {
@@ -58,15 +68,13 @@ export function useApproveTransaction(
       toast.error('Unable to execute approval transaction')
       logger.error(txSendError)
     }
-  }, [txPrepError, txSendError])
+  }, [txPrepError,  txSendError])
 
   return {
-    sendApproveTx: txRequest ? sendTransactionAsync : undefined,
-    approveTxRequest: txRequest,
-    approveTxResult: txResult,
-    isApproveTxLoading: isLoading,
-    isApproveTxSuccess: isSuccess,
+    sendUnwrapTx: txRequest ? sendTransactionAsync : undefined,
+    unwrapTxRequest: txRequest,
+    unwrapTxResult: txResult,
+    isUnwrapTxLoading: isLoading,
+    isUnwrapTxSuccess: isSuccess,
   }
 }
-
-import { chainConfig } from '../../../config/config'

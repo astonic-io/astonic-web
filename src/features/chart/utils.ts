@@ -52,8 +52,8 @@ export function findMissingPriceDays(numDays: number, prices?: QuoteCurrencyPric
   const daysInData = new Map<number, boolean>()
   // This assumes if day's price for cusd exists, they all do
   // Should be true because all returned in the same blockscout query
-  if (prices && prices[TokenId.cUSD]) {
-    for (const p of prices[TokenId.cUSD]!) {
+  if (prices && prices[TokenId.aUSD]) {
+    for (const p of prices[TokenId.aUSD]!) {
       const pDate = new Date(p.timestamp).getDate()
       // This check is to exclude prices from today that are older than STALE_TOKEN_PRICE_TIME
       // This forces re-fetching of today's prices to keep the data up to date

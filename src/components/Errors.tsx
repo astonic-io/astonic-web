@@ -4,7 +4,7 @@ import { Fade } from 'src/components/animation/Fade'
 import { TextLink } from 'src/components/buttons/TextLink'
 import { links } from 'src/config/links'
 import SadFace from 'src/images/icons/sad_face.svg'
-import Logo from 'src/images/logos/mento-logo-black.svg'
+import Logo from 'src/images/logos/astonic_logo.svg'
 import { logger } from 'src/utils/logger'
 
 interface ErrorBoundaryState {
@@ -40,7 +40,7 @@ function FailScreen({ details }: { details?: string }) {
   return (
     <div className="flex flex-col items-center justify-center w-screen h-screen bg-gradient-linear">
       <div className="hidden sm:block fixed top-5 left-5">
-        <Image src={Logo} alt="Mento" quality={100} width={120} />
+        <Image src={Logo} alt="Astonic" quality={100} width={120} />
       </div>
       <FailContent details={details} />
     </div>

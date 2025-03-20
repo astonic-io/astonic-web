@@ -13,17 +13,17 @@ const HALF_ETH_WEI = BigNumber.from(ONE_ETH_WEI).div(2).toString()
 describe('swap utilities', () => {
   describe('parseInputExchangeAmount', () => {
     it('Parses wei amount', () => {
-      expect(parseInputExchangeAmount(ONE_ETH_WEI, TokenId.CELO, true).toString()).toEqual(
+      expect(parseInputExchangeAmount(ONE_ETH_WEI, TokenId.PLANQ, true).toString()).toEqual(
         ONE_ETH_WEI
       )
     })
     it('Parses ether amount', () => {
-      expect(parseInputExchangeAmount('12.345', TokenId.CELO, false).toString()).toEqual(
+      expect(parseInputExchangeAmount('12.345', TokenId.PLANQ, false).toString()).toEqual(
         '12345000000000000000'
       )
     })
     it('Falls back to 0', () => {
-      expect(parseInputExchangeAmount('invalid', TokenId.CELO, true).toString()).toEqual('0')
+      expect(parseInputExchangeAmount('invalid', TokenId.PLANQ, true).toString()).toEqual('0')
     })
   })
 

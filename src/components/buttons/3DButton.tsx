@@ -15,7 +15,7 @@ export enum Button3DText {
   connectWallet = 'Connect Wallet',
   continue = 'Continue',
   balanceStillLoading = 'Balance still loading...',
-  switchToCeloNetwork = 'Switch to Celo Network',
+  switchToPlanqNetwork = 'Switch to Planq Network',
   preparingSwap = 'Preparing Swap...',
 }
 
@@ -39,7 +39,7 @@ export const Button3D = ({
       data-testId={dataTestId}
     >
       <span
-        className={`group font-inter outline-offset-4 cursor-pointer ${getShadowButtonColor({
+        className={`group font-gabarito outline-offset-4 cursor-pointer ${getShadowButtonColor({
           isDisabled,
           isWalletConnected,
           isError,
@@ -97,7 +97,7 @@ function getButtonColor({
     case isError && isWalletConnected:
       return 'bg-[#E14F4F] text-white'
     default:
-      return 'bg-[#4D62F0] text-white '
+      return 'bg-[#1a75d4] text-white '
   }
 }
 

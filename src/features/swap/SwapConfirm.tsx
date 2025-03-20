@@ -1,7 +1,6 @@
 import Lottie from 'lottie-react'
 import { SVGProps, useEffect, useRef, useState } from 'react'
-import mentoLoaderBlue from 'src/animations/Mentoloader_blue.json'
-import mentoLoaderGreen from 'src/animations/Mentoloader_green.json'
+import astonicLoaderBlue from 'src/animations/Astonicloader_blue.json'
 import { toastToYourSuccess } from 'src/components/TxSuccessToast'
 import { Button3D } from 'src/components/buttons/3DButton'
 import { Tooltip } from 'src/components/tooltip/Tooltip'
@@ -23,6 +22,8 @@ import { useSwapTransaction } from './hooks/useSwapTransaction'
 import { setConfirmView, setFormValues } from './swapSlice'
 import type { SwapFormValues } from './types'
 import { getMaxSellAmount, getMinBuyAmount } from './utils'
+import { useWrapTransaction } from './hooks/useWrapTransaction'
+import { useUnwrapTransaction } from './hooks/useUnwrapTransaction'
 
 interface Props {
   formValues: SwapFormValues
@@ -62,6 +63,9 @@ export function SwapConfirmCard({ formValues }: Props) {
     thresholdAmountWei: string,
     approveAmount: string
 
+  let skipWrap = true
+  let skipUnwrap = true
+
   if (direction === 'in') {
     fromAmount = amount.toString()
     fromAmountWei = amountWei
@@ -75,6 +79,12 @@ export function SwapConfirmCard({ formValues }: Props) {
     thresholdAmount = fromWeiRounded(thresholdAmountWei, Tokens[toTokenId].decimals, true)
     // Approve amount is equal to amount being sold
     approveAmount = fromAmountWei
+    if(fromTokenId === TokenId.PLANQ) {
+      skipWrap = false
+    }
+    if(toTokenId === TokenId.PLANQ) {
+      skipUnwrap = false
+    }
   } else {
     fromAmount = quote
     fromAmountWei = quoteWei
@@ -85,16 +95,27 @@ export function SwapConfirmCard({ formValues }: Props) {
     thresholdAmount = fromWeiRounded(thresholdAmountWei, Tokens[fromTokenId].decimals, true)
     // Approve amount is equal to max sell amount
     approveAmount = thresholdAmountWei
+    if(fromTokenId === TokenId.PLANQ) {
+      skipWrap = false
+    }
+    if(toTokenId === TokenId.PLANQ) {
+      skipUnwrap = false
+    }
   }
 
-  const { sendApproveTx, isApproveTxSuccess, isApproveTxLoading } = useApproveTransaction(
+  const { sendWrapTx, isWrapTxSuccess, isWrapTxLoading, wrapTxRequest } = useWrapTransaction(chainId, fromTokenId, fromAmountWei, address)
+
+  const [isWrapConfirmed, setWrapConfirmed] = useState(false)
+  const { sendApproveTx, isApproveTxSuccess, isApproveTxLoading, approveTxRequest } = useApproveTransaction(
     chainId,
     fromTokenId,
     toTokenId,
     approveAmount,
+    isWrapConfirmed || skipWrap,
     address
   )
   const [isApproveConfirmed, setApproveConfirmed] = useState(false)
+
 
   const { skipApprove, isAllowanceLoading } = useSwapAllowance({
     chainId,
@@ -112,7 +133,7 @@ export function SwapConfirmCard({ formValues }: Props) {
     }
   }, [skipApprove])
 
-  const { sendSwapTx, isSwapTxLoading, isSwapTxSuccess } = useSwapTransaction(
+  const { sendSwapTx, isSwapTxLoading, isSwapTxSuccess, swapTxRequest } = useSwapTransaction(
     chainId,
     fromTokenId,
     toTokenId,
@@ -120,21 +141,56 @@ export function SwapConfirmCard({ formValues }: Props) {
     thresholdAmountWei,
     direction,
     address,
-    isApproveConfirmed
+    isApproveConfirmed,
+    isWrapConfirmed || skipWrap
   )
-
+  const { sendUnwrapTx, isUnwrapTxSuccess, isUnwrapTxLoading, unwrapTxRequest } = useUnwrapTransaction(chainId, toTokenId, fromAmountWei, isSwapTxSuccess, address)
   const onSubmit = async () => {
     if (!rate || !amountWei || !address || !isConnected) return
 
-    if (skipApprove && sendSwapTx) {
+    if(!skipUnwrap && sendUnwrapTx && isSwapTxSuccess) {
+      try {
+        logger.info('Sending unwrap tx')
+        setIsModalOpen(true)
+        const unwrapResult = await sendUnwrapTx({
+          account: address as `0x${string}`,
+          gas: unwrapTxRequest ? unwrapTxRequest.gas : BigInt(0),
+          to: unwrapTxRequest ? unwrapTxRequest?.to  as `0x${string}` : undefined,
+          value: unwrapTxRequest ? BigInt(unwrapTxRequest.value ? unwrapTxRequest.value.toString() : 0) : undefined,
+          data: unwrapTxRequest ? unwrapTxRequest.data as `0x${string}` : undefined }
+        )
+        toastToYourSuccess(
+          'Unwrap complete! Sending wrap tx',
+          unwrapResult,
+          chainId
+        )
+        dispatch(setFormValues(null))
+        logger.info(`Tx receipt received for unwrapping: ${unwrapResult}`)
+        setIsModalOpen(false)
+      } catch (error) {
+        logger.error('Failed to unwrap token', error)
+        setIsModalOpen(false)
+      }
+    }
+
+    if ((skipApprove || isApproveConfirmed) && sendSwapTx && !isSwapTxSuccess) {
       try {
         logger.info('Skipping approve, sending swap tx directly')
         setIsModalOpen(true)
-        const swapResult = await sendSwapTx()
-        const swapReceipt = await swapResult.wait(1)
-        logger.info(`Tx receipt received for swap: ${swapReceipt?.transactionHash}`)
-        toastToYourSuccess('Swap Complete!', swapReceipt?.transactionHash, chainId)
-        dispatch(setFormValues(null))
+        const swapResult = await sendSwapTx({
+          account: address as `0x${string}`,
+          gas: swapTxRequest ? swapTxRequest.gas : BigInt(0),
+          to: swapTxRequest ? swapTxRequest?.to  as `0x${string}` : undefined,
+          value: swapTxRequest ? BigInt(swapTxRequest.value ? swapTxRequest.value.toString() : 0) : undefined,
+          data: swapTxRequest ? swapTxRequest.data as `0x${string}` : undefined }
+        )
+
+        logger.info(`Tx receipt received for swap: ${swapResult}`)
+        toastToYourSuccess('Swap Complete!', swapResult, chainId)
+        if(skipUnwrap) {
+          dispatch(setFormValues(null))
+        }
+        setIsModalOpen(false)
       } catch (error) {
         logger.error('Failed to execute swap', error)
       } finally {
@@ -143,21 +199,53 @@ export function SwapConfirmCard({ formValues }: Props) {
       return
     }
 
-    if (!skipApprove && sendApproveTx) {
+    if (!skipApprove && sendApproveTx && (skipWrap || isWrapConfirmed) && !isSwapTxSuccess) {
       try {
         logger.info('Sending approve tx')
         setIsModalOpen(true)
-        const approveResult = await sendApproveTx()
-        const approveReceipt = await approveResult.wait(1)
+        const approveResult = await sendApproveTx({
+          account: address as `0x${string}`,
+          gas: approveTxRequest ? approveTxRequest.gas : BigInt(0),
+          to: approveTxRequest ? approveTxRequest?.to  as `0x${string}` : undefined,
+          value: approveTxRequest ? BigInt(approveTxRequest.value ? approveTxRequest.value.toString() : 0) : undefined,
+          data: approveTxRequest ? approveTxRequest.data as `0x${string}` : undefined }
+        )
+
         toastToYourSuccess(
           'Approve complete! Sending swap tx',
-          approveReceipt.transactionHash,
+          approveResult,
           chainId
         )
         setApproveConfirmed(true)
-        logger.info(`Tx receipt received for approve: ${approveReceipt.transactionHash}`)
+        logger.info(`Tx receipt received for approve: ${approveResult}`)
+        setIsModalOpen(false)
       } catch (error) {
         logger.error('Failed to approve token', error)
+        setIsModalOpen(false)
+      }
+    }
+
+    if (!skipWrap && sendWrapTx && !isWrapConfirmed) {
+      try {
+        logger.info('Sending wrap tx')
+        setIsModalOpen(true)
+        const wrapResult = await sendWrapTx({
+          account: address as `0x${string}`,
+          gas: wrapTxRequest ? wrapTxRequest.gas : BigInt(0),
+          to: wrapTxRequest ? wrapTxRequest?.to  as `0x${string}` : undefined,
+          value: wrapTxRequest ? BigInt(wrapTxRequest.value ? wrapTxRequest.value.toString() : 0) : undefined,
+          data: wrapTxRequest ? wrapTxRequest.data as `0x${string}` : undefined }
+        )
+        toastToYourSuccess(
+          'Wrap complete! Sending wrap tx',
+          wrapResult,
+          chainId
+        )
+        setWrapConfirmed(true)
+        logger.info(`Tx receipt received for wrapping: ${wrapResult}`)
+        setIsModalOpen(false)
+      } catch (error) {
+        logger.error('Failed to wrap token', error)
         setIsModalOpen(false)
       }
     }
@@ -171,16 +259,23 @@ export function SwapConfirmCard({ formValues }: Props) {
       isSwapTxLoading ||
       isSwapTxSuccess ||
       !isApproveTxSuccess ||
+      !(isWrapTxSuccess && !skipWrap) ||
+      !(isUnwrapTxSuccess && !skipUnwrap) ||
       !sendSwapTx ||
       swapRejectedRef.current
     )
       return
     logger.info('Sending swap tx')
-    sendSwapTx()
-      .then((swapResult) => swapResult.wait(1))
+    sendSwapTx({
+      account: address as `0x${string}`,
+      gas: swapTxRequest ? swapTxRequest.gas : BigInt(0),
+      to: swapTxRequest ? swapTxRequest?.to  as `0x${string}` : undefined,
+      value: swapTxRequest ? BigInt(swapTxRequest.value ? swapTxRequest.value.toString() : 0) : undefined,
+      data: swapTxRequest ? swapTxRequest.data as `0x${string}` : undefined }
+    )
       .then((swapReceipt) => {
-        logger.info(`Tx receipt received for swap: ${swapReceipt.transactionHash}`)
-        toastToYourSuccess('Swap Complete!', swapReceipt.transactionHash, chainId)
+        logger.info(`Tx receipt received for swap: ${swapReceipt}`)
+        toastToYourSuccess('Swap Complete!', swapReceipt, chainId)
         dispatch(setFormValues(null))
         swapRejectedRef.current = false
       })
@@ -205,11 +300,20 @@ export function SwapConfirmCard({ formValues }: Props) {
   const { text: buttonText, disabled: isButtonDisabled } = useSwapState({
     isAllowanceLoading,
     skipApprove,
+    skipWrap,
     sendApproveTx,
+    sendWrapTx,
     isApproveTxLoading,
     isApproveTxSuccess,
+    isWrapTxSuccess,
+    isWrapTxLoading,
     sendSwapTx,
     fromTokenId,
+    isSwapTxSuccess,
+    skipUnwrap,
+    isUnwrapTxSuccess,
+    isUnwrapTxLoading,
+    sendUnwrapTx,
   })
 
   return (
@@ -274,7 +378,7 @@ export function SwapConfirmCard({ formValues }: Props) {
         close={() => setIsModalOpen(false)}
         width="max-w-[432px]"
       >
-        <MentoLogoLoader skipApprove={skipApprove} />
+        <AstonicLogoLoader skipApprove={skipApprove} />
       </Modal>
     </FloatingBox>
   )
@@ -352,23 +456,23 @@ const ChevronRight = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 )
 
-const MentoLogoLoader = ({ skipApprove }: { skipApprove: boolean }) => {
+const AstonicLogoLoader = ({ skipApprove }: { skipApprove: boolean }) => {
   const { connector } = useAccount()
 
   return (
     <>
       <div className="border-y border-[#E5E7E9] dark:border-[#333336]">
         <div className="w-[124px] h-[124px] mx-auto my-6 dark:hidden">
-          <Lottie animationData={mentoLoaderBlue} />
+          <Lottie animationData={astonicLoaderBlue} />
         </div>
         <div className="w-[124px] h-[124px] mx-auto my-6 hidden dark:block ">
-          <Lottie animationData={mentoLoaderGreen} />
+          <Lottie animationData={astonicLoaderBlue} />
         </div>
       </div>
 
       <div className="my-6">
         <div className="text-sm text-center text-[#636768] dark:text-[#AAB3B6]">
-          {skipApprove ? 'Sending swap transaction' : 'Sending two transactions: Approve and Swap'}
+          {skipApprove ? 'Sending swap transaction' : 'Sending 3 transactions: Wrap, Approve and Swap'}
         </div>
         <div className="mt-3 text-sm text-center text-[#636768] dark:text-[#AAB3B6]">
           {`Sign with ${connector?.name || 'wallet'} to proceed`}

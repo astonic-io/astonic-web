@@ -1,3 +1,8 @@
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import { rainbowWallet, walletConnectWallet, injectedWallet, coinbaseWallet } from '@rainbow-me/rainbowkit/wallets'
+import { createConfig, http } from 'wagmi'
+import { planq } from 'wagmi/chains'
+
 interface Config {
   debug: boolean
   version: string | null
@@ -15,3 +20,26 @@ export const config: Config = Object.freeze({
   showPriceChart: false,
   walletConnectProjectId,
 })
+
+const projectId = '20a920e6f715a7f387f4722b5d4526eb'
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: 'Recommended',
+      wallets: [injectedWallet, coinbaseWallet, rainbowWallet, walletConnectWallet],
+    },
+  ],
+  {
+    appName: 'Astonic',
+    projectId: '20a920e6f715a7f387f4722b5d4526eb',
+  }
+);
+
+
+export const chainConfig = createConfig({
+  chains: [planq],
+  connectors,
+  transports: {
+    [planq.id]: http('https://planq-rpc.nodies.app')
+  },
+});

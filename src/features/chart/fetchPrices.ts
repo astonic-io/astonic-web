@@ -1,7 +1,7 @@
 // TODO update to not use contractkit
 export {}
-// import { CeloContract } from '@celo/contractkit'
-// import type { MiniContractKit } from '@celo/contractkit/lib/mini-kit'
+// import { PlanqContract } from '@planq/contractkit'
+// import type { MiniContractKit } from '@planq/contractkit/lib/mini-kit'
 // import { Interface } from '@ethersproject/abi'
 // import { createAsyncThunk } from '@reduxjs/toolkit'
 // import BigNumber from 'bignumber.js'
@@ -36,8 +36,8 @@ export {}
 // const PAUSE_BETWEEN_FETCH_REQUESTS = 250 // 1/4 second
 // const MAX_TIME_FROM_NOW_FOR_LOG = 600_000 // 10 minutes
 // const MEDIAN_UPDATED_TOPIC_0 = '0xa9981ebfc3b766a742486e898f54959b050a66006dbce1a4155c1f84a08bcf41'
-// const EXPECTED_MIN_CELO_TO_STABLE = 0.1
-// const EXPECTED_MAX_CELO_TO_STABLE = 100
+// const EXPECTED_MIN_PLANQ_TO_STABLE = 0.1
+// const EXPECTED_MAX_PLANQ_TO_STABLE = 100
 
 // let oracleInterface: Interface | undefined
 // let oracleAddress: string | undefined
@@ -60,7 +60,7 @@ export {}
 //   return pairPriceUpdates
 // })
 
-// // Currently this only fetches CELO to stable token prices
+// // Currently this only fetches PLANQ to stable token prices
 // // May eventually expand to fetch other pairs
 // async function _fetchTokenPrice(
 //   kit: MiniContractKit,
@@ -71,8 +71,8 @@ export {}
 //   if (numDays > MAX_TOKEN_PRICE_NUM_DAYS) {
 //     throw new Error(`Cannot retrieve prices for such a wide window: ${numDays}`)
 //   }
-//   if (baseCurrency !== TokenId.CELO) {
-//     throw new Error('Only CELO <-> Native currency is currently supported')
+//   if (baseCurrency !== TokenId.PLANQ) {
+//     throw new Error('Only PLANQ <-> Native currency is currently supported')
 //   }
 
 //   const pairPriceUpdates = await fetchStableTokenPrices(kit, numDays, prices[baseCurrency])
@@ -116,7 +116,7 @@ export {}
 //   for (const key of Object.keys(mergedPrices)) {
 //     const quoteCurrency = key as QuoteCurrency // TS limitation of Object.keys()
 //     const prices = mergedPrices[quoteCurrency]!
-//     pairPriceUpdates.push({ baseCurrency: TokenId.CELO, quoteCurrency, prices })
+//     pairPriceUpdates.push({ baseCurrency: TokenId.PLANQ, quoteCurrency, prices })
 //   }
 //   return pairPriceUpdates
 // }
@@ -184,8 +184,8 @@ export {}
 
 //       const valueAdjusted = fromFixidity(value.toString()).toNumber()
 //       if (
-//         valueAdjusted <= EXPECTED_MIN_CELO_TO_STABLE ||
-//         valueAdjusted >= EXPECTED_MAX_CELO_TO_STABLE
+//         valueAdjusted <= EXPECTED_MIN_PLANQ_TO_STABLE ||
+//         valueAdjusted >= EXPECTED_MAX_PLANQ_TO_STABLE
 //       ) {
 //         throw new Error(`Invalid median value: ${value}`)
 //       }
@@ -214,7 +214,7 @@ export {}
 
 // async function getOracleAddress(kit: MiniContractKit) {
 //   if (!oracleAddress) {
-//     oracleAddress = await kit.registry.addressFor(CeloContract.SortedOracles)
+//     oracleAddress = await kit.registry.addressFor(PlanqContract.SortedOracles)
 //   }
 //   return oracleAddress
 // }
@@ -224,7 +224,7 @@ export {}
 //   if (cachedAddress) return cachedAddress
 
 //   const token = nativeTokenToKitToken(tokenId)
-//   const address = await kit.celoTokens.getAddress(token)
+//   const address = await kit.planqTokens.getAddress(token)
 //   tokenAddresses[tokenId] = address
 //   return address
 // }

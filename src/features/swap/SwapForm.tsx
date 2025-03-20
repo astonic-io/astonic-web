@@ -14,8 +14,8 @@ import { setConfirmView, setFormValues } from './swapSlice'
 import { SwapFormValues } from './types'
 
 const initialValues: SwapFormValues = {
-  fromTokenId: TokenId.CELO,
-  toTokenId: TokenId.cUSD,
+  fromTokenId: TokenId.PLANQ,
+  toTokenId: TokenId.aUSD,
   amount: '',
   quote: '',
   direction: 'in',

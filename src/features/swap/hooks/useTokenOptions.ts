@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Celo } from 'src/config/chains'
+import { Planq } from 'src/config/chains'
 import { TokenId, getSwappableTokenOptions, getTokenOptionsByChainId } from 'src/config/tokens'
 import { logger } from 'src/utils/logger'
-import { useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 export function useTokenOptions(fromTokenId: TokenId) {
-  const { chain } = useNetwork()
-  const chainId = useMemo(() => chain?.id ?? Celo.chainId, [chain])
+  const { chain } = useAccount()
+  const chainId = useMemo(() => chain?.id ?? Planq.chainId, [chain])
   const [swappableTokens, setSwappableTokens] = useState<TokenId[]>([])
 
   // Get all available tokens for current chain

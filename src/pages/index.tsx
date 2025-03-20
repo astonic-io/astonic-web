@@ -1,6 +1,6 @@
 import { config } from 'src/config/config'
 import { TokenId } from 'src/config/tokens'
-import { PriceChartCelo } from 'src/features/chart/PriceChartCelo'
+import { PriceChartPlanq } from 'src/features/chart/PriceChartPlanq'
 import { useAppSelector } from 'src/features/store/hooks'
 import { SwapConfirmCard } from 'src/features/swap/SwapConfirm'
 import { SwapFormCard } from 'src/features/swap/SwapForm'
@@ -18,7 +18,7 @@ export default function SwapPage() {
       </div>
       {config.showPriceChart && showChart && (
         <div className="mb-6 md:ml-10">
-          <PriceChartCelo stableTokenId={TokenId.cUSD} height={265} />
+          <PriceChartPlanq stableTokenId={TokenId.aUSD} height={265} />
         </div>
       )}
     </div>

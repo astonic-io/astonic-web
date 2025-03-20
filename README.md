@@ -1,10 +1,12 @@
-# Mento Web App
+# Astonic Web App
 
-This is the home for the Mento web app!
+This is the home for the Astonic web app!
 
-This DApp lets users make exchanges between Celo's native currencies using the Mento on-chain exchange mechanism.
+This DApp lets users make exchanges between Planq's native currencies using the Astonic on-chain exchange mechanism.
 
-For more details about how Mento works, see the [documentation](https://docs.mento.org)
+For more details about how Astonic works, see the [documentation](https://astonic.gitbook.io/)
+
+This is a fork of [Mento](https://github.com/mento-protocol/mento-web).
 
 ## Architecture
 
@@ -20,13 +22,12 @@ This project uses Next.JS, React, Redux, Tailwind, Wagmi, and RainbowKit.
 ## Deploy
 
 - Deployments happen automatically via Vercel's Github app.
-- Every push into `main` is automatically deployed to app.mento.org
-- Deployment configuration can be changed by Mento Labs Team Members at <https://vercel.com/mentolabs/mento-web>
+- Every push into `main` is automatically deployed to app.astonic.io
 
 ## Contribute
 
 For small contributions such as bug fixes or style tweaks, please open a Pull Request.
-For new features, please create an issue to start a discussion on [Discord](https://discord.com/invite/Zszgng9NdF).
+For new features, please create an issue to start a discussion on [Telegram](https://t.me/astonic_io).
 
 ## License
 
