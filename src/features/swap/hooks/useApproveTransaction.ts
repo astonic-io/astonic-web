@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import { TokenId, getTokenAddress } from 'src/config/tokens'
 import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
 import { logger } from 'src/utils/logger'
-import { useEstimateGas, useSendTransaction } from 'wagmi'
+import { useSendTransaction } from 'wagmi'
 import { Address } from 'abitype/zod'
 import { estimateGas } from '@wagmi/core'
 export function useApproveTransaction(

@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { TokenId } from 'src/config/tokens'
-import type { SendTransactionReturnType  } from '@wagmi/core'
 import { SendTransactionMutateAsync } from '@wagmi/core/query'
 import { Config } from 'wagmi'
 

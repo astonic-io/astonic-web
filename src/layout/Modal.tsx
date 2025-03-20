@@ -1,21 +1,15 @@
 import { Dialog, Transition } from '@headlessui/react'
-import localFont from 'next/font/local'
 import { Fragment, PropsWithChildren } from 'react'
 import { IconButton } from 'src/components/buttons/IconButton'
 import X from 'src/images/icons/x.svg'
-import { Poppins, Gabarito } from "next/font/google";
+import { Poppins } from "next/font/google";
 
 const poppins = Poppins({
   variable: "--font-poppins",
   weight: ["300", "400", "600"],
   subsets: ["latin"],
 });
-// Import Gabarito font
-const gabarito = Gabarito({
-  variable: "--font-gabarito",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-});
+
 
 export function Modal({
   isOpen,

@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/features/store/hooks'
 import { reset as swapReset } from 'src/features/swap/swapSlice'
 import { Modal } from 'src/layout/Modal'
 import { logger } from 'src/utils/logger'
-import { useChainId, useSwitchNetwork } from 'wagmi'
+import { useChainId, useSwitchChain } from 'wagmi'
 
 interface Props {
   isOpen: boolean
@@ -20,15 +20,15 @@ export function NetworkModal({ isOpen, close }: Props) {
   const latestBlock = useAppSelector((s) => s.block.latestBlock)
   const chainId = useChainId()
   const currentChain = chainIdToChain[chainId]
-  const { switchNetworkAsync } = useSwitchNetwork()
+  const { switchChainAsync } = useSwitchChain()
 
   const dispatch = useAppDispatch()
   const switchToNetwork = async (c: ChainMetadata) => {
     try {
-      if (!switchNetworkAsync) throw new Error('switchNetworkAsync undefined')
+      if (!switchChainAsync) throw new Error('switchNetworkAsync undefined')
       logger.debug('Resetting and switching to network', c.name)
       cleanupStaleWalletSessions()
-      await switchNetworkAsync(c.chainId)
+      await switchChainAsync({chainId: c.chainId})
       dispatch(blockReset())
       dispatch(accountReset())
       dispatch(swapReset())

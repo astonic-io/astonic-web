@@ -55,8 +55,8 @@ export function FailContent({ details }: { details?: string }) {
         <Image src={SadFace} alt="Sad Face" width={150} height={200} />
         <h3 className="text-lg mt-2 text-center">
           Please refresh the page. If the problem persists, you can{' '}
-          <TextLink href={links.discord} className="underline">
-            ask for help on Discord
+          <TextLink href={links.telegram} className="underline">
+            ask for help on Telegram
           </TextLink>
           .
         </h3>

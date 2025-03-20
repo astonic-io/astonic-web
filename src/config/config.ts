@@ -21,7 +21,6 @@ export const config: Config = Object.freeze({
   walletConnectProjectId,
 })
 
-const projectId = '20a920e6f715a7f387f4722b5d4526eb'
 const connectors = connectorsForWallets(
   [
     {

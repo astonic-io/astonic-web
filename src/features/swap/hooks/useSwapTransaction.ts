@@ -6,7 +6,7 @@ import { TokenId, getTokenAddress } from 'src/config/tokens'
 import { getAstonicSdk, getTradablePairForTokens } from 'src/features/sdk'
 import { SwapDirection } from 'src/features/swap/types'
 import { logger } from 'src/utils/logger'
-import { useSendTransaction, useEstimateGas  } from 'wagmi'
+import { useSendTransaction  } from 'wagmi'
 import { chainConfig } from '../../../config/config'
 import { Address } from 'abitype/zod'
 import { estimateGas } from '@wagmi/core'
@@ -22,7 +22,7 @@ export function useSwapTransaction(
   isApproveConfirmed?: boolean,
   isWrapConfirmed?: boolean
 ) {
-  const { error: txPrepError, data: txRequest, isLoading: queryIsLoading } = useQuery(
+  const { error: txPrepError, data: txRequest } = useQuery(
     [
       'useSwapTransaction',
       chainId,
