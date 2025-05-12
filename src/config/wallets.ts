@@ -4,6 +4,7 @@ import {
   omniWallet,
   trustWallet,
   walletConnectWallet,
+  safeWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { config } from 'src/config/config'
 import { logger } from 'src/utils/logger'
@@ -19,6 +20,7 @@ export function getWalletConnectors(chains: Chain[]) {
     walletConnectWallet(connectorConfig),
     omniWallet(connectorConfig),
     trustWallet(connectorConfig),
+    safeWallet()
   ]
 }
 

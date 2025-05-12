@@ -1,5 +1,5 @@
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
-import { rainbowWallet, walletConnectWallet, injectedWallet, coinbaseWallet } from '@rainbow-me/rainbowkit/wallets'
+import { rainbowWallet, walletConnectWallet, injectedWallet, coinbaseWallet, safeWallet } from '@rainbow-me/rainbowkit/wallets'
 import { createConfig, http } from 'wagmi'
 import { planq } from 'wagmi/chains'
 
@@ -25,7 +25,7 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: 'Recommended',
-      wallets: [injectedWallet, coinbaseWallet, rainbowWallet, walletConnectWallet],
+      wallets: [injectedWallet, coinbaseWallet, rainbowWallet, walletConnectWallet, safeWallet],
     },
   ],
   {
