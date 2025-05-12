@@ -3,9 +3,9 @@ import { memo } from 'react'
 import { Token, TokenId } from 'src/config/tokens'
 import PlanqIcon from 'src/images/tokens/PLANQ.svg'
 import USDCIcon from 'src/images/tokens/USDC.svg'
-import aEURIcon from 'src/images/tokens/aEUR.png'
-import aREALIcon from 'src/images/tokens/aBRL.png'
-import aUSDIcon from 'src/images/tokens/aUSD.png'
+import aEURIcon from 'src/images/tokens/aEUR.svg'
+import aREALIcon from 'src/images/tokens/aBRL.svg'
+import aUSDIcon from 'src/images/tokens/aUSD.svg'
 
 interface Props {
   token?: Token | null
