@@ -106,16 +106,16 @@ export function SwapConfirmCard({ formValues }: Props) {
   const { sendWrapTx, isWrapTxSuccess, isWrapTxLoading, wrapTxRequest } = useWrapTransaction(chainId, fromTokenId, fromAmountWei, address)
 
   const [isWrapConfirmed, setWrapConfirmed] = useState(false)
+
   const { sendApproveTx, isApproveTxSuccess, isApproveTxLoading, approveTxRequest } = useApproveTransaction(
     chainId,
     fromTokenId,
     toTokenId,
     approveAmount,
-    isWrapConfirmed || skipWrap,
+    isWrapTxSuccess || skipWrap,
     address
   )
   const [isApproveConfirmed, setApproveConfirmed] = useState(false)
-
 
   const { skipApprove, isAllowanceLoading } = useSwapAllowance({
     chainId,

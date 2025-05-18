@@ -17,7 +17,7 @@ export function useApproveTransaction(
   accountAddress?: Address
 ) {
   const { error: txPrepError, data: txRequest } = useQuery(
-    ['useApproveTransaction', chainId, tokenInId, tokenOutId, amountInWei, accountAddress],
+    ['useApproveTransaction', chainId, tokenInId, tokenOutId, amountInWei, accountAddress, isWrapConfirmed],
     async () => {
       if (!accountAddress || !isWrapConfirmed ||  new BigNumber(amountInWei).lte(0)) return null
       const sdk = await getAstonicSdk(chainId)
